@@ -1,7 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable eol-last */
-/* eslint-disable no-undef */
-
 const AddedThread = require('../AddedThread');
 
 describe('a AddedThread entities', () => {

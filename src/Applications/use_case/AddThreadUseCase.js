@@ -1,5 +1,3 @@
-/* eslint-disable linebreak-style */
-
 const NewThread = require('../../Domains/threads/entities/NewThread');
 
 class AddThreadUseCase {
@@ -7,8 +5,8 @@ class AddThreadUseCase {
     this.threadRepository = threadRepository;
   }
 
-  async execute(useCasePayload) {
-    const newThread = new NewThread(useCasePayload);
+  async execute({ title, body, owner }) {
+    const newThread = new NewThread({ title, body, owner });
     return this.threadRepository.addThread(newThread);
   }
 }

@@ -1,7 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable class-methods-use-this */
-
 class NewThread {
   constructor(payload) {
     this._verifyPayload(payload);

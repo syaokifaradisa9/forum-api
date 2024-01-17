@@ -20,7 +20,7 @@ const createServer = async (container) => {
     },
   ]);
 
-  server.auth.strategy('threadapp_jwt', 'jwt', {
+  server.auth.strategy('forum_jwt', 'jwt', {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
       aud: false,

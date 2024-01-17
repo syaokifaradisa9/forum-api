@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 /* istanbul ignore file */
 
 const { createContainer } = require('instances-container');

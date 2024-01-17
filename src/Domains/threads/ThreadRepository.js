@@ -1,9 +1,5 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-unused-vars */
-/* eslint-disable class-methods-use-this */
-
 class ThreadRepository {
-  async addThread(addThread) {
+  async addThread(newThread) {
     throw new Error('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 }

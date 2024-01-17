@@ -1,5 +1,3 @@
-/* eslint-disable linebreak-style */
-
 const ThreadRepository = require('../../Domains/threads/ThreadRepository');
 const AddedThread = require('../../Domains/threads/entities/AddedThread');
 
