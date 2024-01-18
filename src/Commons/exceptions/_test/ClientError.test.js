@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const ClientError = require('../ClientError');
 
 describe('ClientError', () => {

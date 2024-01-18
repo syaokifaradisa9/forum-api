@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const AddedComment = require('../AddedComment');
 
 describe('a AddedComment entities', () => {
@@ -29,7 +31,7 @@ describe('a AddedComment entities', () => {
     const { id, content, owner } = new AddedComment(payload);
 
     expect(id).toEqual(payload.id);
-    expect(content).toEqual(payload.content),
+    expect(content).toEqual(payload.content);
     expect(owner).toEqual(payload.owner);
   });
 });

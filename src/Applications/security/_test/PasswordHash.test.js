@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const EncryptionHelper = require('../PasswordHash');
 
 describe('EncryptionHelper interface', () => {

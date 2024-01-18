@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const AuthenticationRepository = require('../../../Domains/authentications/AuthenticationRepository');
 const LogoutUserUseCase = require('../LogoutUserUseCase');
 

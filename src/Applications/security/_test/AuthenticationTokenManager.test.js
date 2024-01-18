@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const AuthenticationTokenManager = require('../AuthenticationTokenManager');
 
 describe('AuthenticationTokenManager interface', () => {

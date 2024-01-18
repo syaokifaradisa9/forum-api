@@ -1,4 +1,5 @@
-const { payload } = require('@hapi/hapi/lib/validation');
+/* eslint-disable no-undef */
+
 const NewComment = require('../../../Domains/comments/entities/NewComment');
 const AddedComment = require('../../../Domains/comments/entities/AddedComment');
 const CommentRepository = require('../../../Domains/comments/CommentRepository');

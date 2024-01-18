@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const NewThread = require('../NewThread');
 
 describe('a NewThread identities', () => {

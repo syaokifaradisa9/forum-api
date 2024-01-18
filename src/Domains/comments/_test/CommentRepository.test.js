@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const CommentRepository = require('../CommentRepository');
 
 describe('CommentRepository interface', () => {

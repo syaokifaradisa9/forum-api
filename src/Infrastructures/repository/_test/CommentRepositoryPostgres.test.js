@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const CommentTableTestHelper = require('../../../../tests/CommentTableTestHelper');
 const ThreadTableTestHelper = require('../../../../tests/ThreadTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');

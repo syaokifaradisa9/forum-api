@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const UserRepository = require('../UserRepository');
 
 describe('UserRepository interface', () => {

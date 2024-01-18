@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const RegisterUser = require('../RegisterUser');
 
 describe('a RegisterUser entities', () => {
