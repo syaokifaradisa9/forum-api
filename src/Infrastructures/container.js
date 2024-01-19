@@ -116,19 +116,6 @@ container.register([
 // registering use cases
 container.register([
   {
-    key: AddCommentUseCase.name,
-    Class: AddCommentUseCase,
-    parameter: {
-      injectType: 'destructuring',
-      dependencies: [
-        {
-          name: 'commentRepository',
-          internal: CommentRepository.name,
-        },
-      ],
-    },
-  },
-  {
     key: AddUserUseCase.name,
     Class: AddUserUseCase,
     parameter: {
@@ -206,6 +193,23 @@ container.register([
     parameter: {
       injectType: 'destructuring',
       dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddCommentUseCase.name,
+    Class: AddCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
+        },
         {
           name: 'threadRepository',
           internal: ThreadRepository.name,

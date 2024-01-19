@@ -96,4 +96,32 @@ describe('ThreadRepositoryPostgres', () => {
       await expect(threadRepositoryPostgres.getThreadById('thread-999')).rejects.toThrowError(NotFoundError);
     });
   });
+
+  describe('verifyThreadAvailableStatus function', () => {
+    it('should not throw NotFoundError when thread found', async () => {
+      const fakeIdGenerator = () => '123';
+
+      const userRepositoryPostgres = new UserRepositoryPostgres(pool, fakeIdGenerator);
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
+
+      await userRepositoryPostgres.addUser(new RegisterUser({
+        username: 'dicoding',
+        password: 'secret_password',
+        fullname: 'Dicoding Indonesia',
+      }));
+
+      await threadRepositoryPostgres.addThread(new NewThread({
+        title: 'abc',
+        body: 'abcdef',
+        owner: 'user-123',
+      }));
+
+      await expect(threadRepositoryPostgres.verifyThreadAvailableStatus('thread-123')).resolves.not.toThrowError(NotFoundError);
+    });
+
+    it('should throw NotFoundError when thread not found', async () => {
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+      await expect(threadRepositoryPostgres.verifyThreadAvailableStatus('thread-123')).rejects.toThrowError(NotFoundError);
+    });
+  });
 });
