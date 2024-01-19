@@ -67,5 +67,29 @@ describe('/threads endpoint', () => {
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada');
     });
+
+    it('should reponse 400 when request payload not meet data type spesification', async() => {
+      const requestPayload = {
+        title: 123,
+        body: true,
+      };
+
+      const server = await createServer(container);
+      const accessToken = await ServerTestHelper.getAccessTokenHelper({ server });
+
+      const response = await server.inject({
+        method: 'POST',
+        url: '/threads',
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(400);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena tipe data tidak sesuai');
+    });
   });
 });
