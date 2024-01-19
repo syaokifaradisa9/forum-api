@@ -3,6 +3,7 @@
 const NewComment = require('../../../Domains/comments/entities/NewComment');
 const AddedComment = require('../../../Domains/comments/entities/AddedComment');
 const CommentRepository = require('../../../Domains/comments/CommentRepository');
+const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
 const AddCommentUseCase = require('../AddCommentUseCase');
 
 describe('AddCommentUseCase', () => {
@@ -23,8 +24,12 @@ describe('AddCommentUseCase', () => {
     mockCommentRepository.addComment = jest.fn()
       .mockImplementation(() => Promise.resolve(mockAddeddComment));
 
+    const mockThreadRepository = new ThreadRepository();
+    mockThreadRepository.verifyThreadAvailableStatus = jest.fn(() => Promise.resolve());
+
     const addCommentUseCase = new AddCommentUseCase({
       commentRepository: mockCommentRepository,
+      threadRepository: mockThreadRepository,
     });
 
     const addedComment = await addCommentUseCase.execute(useCasePayload);
