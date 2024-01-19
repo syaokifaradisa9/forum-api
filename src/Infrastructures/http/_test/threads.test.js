@@ -4,6 +4,7 @@ const pool = require('../../database/postgres/pool');
 const ThreadTableTestHelper = require('../../../../tests/ThreadTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 const ServerTestHelper = require('../../../../tests/ServerTestHelper');
+const AuthenticationsTableTestHelper = require('../../../../tests/AuthenticationsTableTestHelper');
 const container = require('../../container');
 const createServer = require('../createServer');
 
@@ -15,6 +16,7 @@ describe('/threads endpoint', () => {
   afterEach(async () => {
     await ThreadTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
+    await AuthenticationsTableTestHelper.cleanTable();
   });
 
   describe('when POST /threads', () => {
@@ -68,7 +70,7 @@ describe('/threads endpoint', () => {
       expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada');
     });
 
-    it('should reponse 400 when request payload not meet data type spesification', async () => {
+    it('should response 400 when request payload not meet data type spesification', async () => {
       const requestPayload = {
         title: 123,
         body: true,
@@ -92,7 +94,7 @@ describe('/threads endpoint', () => {
       expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena tipe data tidak sesuai');
     });
 
-    it('should response 401 when request missing authentication', async() => {
+    it('should response 401 when request missing authentication', async () => {
       const requestPayload = {
         title: 'abc',
         body: 'abc',
