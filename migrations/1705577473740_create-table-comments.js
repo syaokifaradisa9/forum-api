@@ -14,9 +14,18 @@ exports.up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
+    date: {
+      type: 'VARCHAR(50)',
+      notNull: true,
+    },
     owner: {
       type: 'VARCHAR(50)',
       notNull: true,
+    },
+    isDelete: {
+      type: 'BOOLEAN',
+      notNull: true,
+      default: false,
     },
   });
 
