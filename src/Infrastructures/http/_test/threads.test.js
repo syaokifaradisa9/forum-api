@@ -21,7 +21,7 @@ describe('/threads endpoint', () => {
     it('should response 201 and persisted thread', async () => {
       const server = await createServer(container);
 
-      const accessToken = await ServerTestHelper.getAccessTokenHelper({ server });
+      const { accessToken } = await ServerTestHelper.getAccessTokenWithUserIdHelper({ server });
 
       const requestPayload = {
         title: 'abc',
@@ -51,7 +51,7 @@ describe('/threads endpoint', () => {
       };
 
       const server = await createServer(container);
-      const accessToken = await ServerTestHelper.getAccessTokenHelper({ server });
+      const { accessToken } = await ServerTestHelper.getAccessTokenWithUserIdHelper({ server });
 
       const response = await server.inject({
         method: 'POST',
@@ -68,14 +68,14 @@ describe('/threads endpoint', () => {
       expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada');
     });
 
-    it('should reponse 400 when request payload not meet data type spesification', async() => {
+    it('should reponse 400 when request payload not meet data type spesification', async () => {
       const requestPayload = {
         title: 123,
         body: true,
       };
 
       const server = await createServer(container);
-      const accessToken = await ServerTestHelper.getAccessTokenHelper({ server });
+      const { accessToken } = await ServerTestHelper.getAccessTokenWithUserIdHelper({ server });
 
       const response = await server.inject({
         method: 'POST',
@@ -90,6 +90,25 @@ describe('/threads endpoint', () => {
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena tipe data tidak sesuai');
+    });
+
+    it('should response 401 when request missing authentication', async() => {
+      const requestPayload = {
+        title: 'abc',
+        body: 'abc',
+      };
+
+      const server = await createServer({ container });
+      const response = await server.inject({
+        method: 'POST',
+        url: '/threads',
+        payload: requestPayload,
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.error).toEqual('Unauthorized');
+      expect(responseJson.message).toEqual('Missing authentication');
     });
   });
 });

@@ -15,6 +15,7 @@ const ThreadTableTestHelper = {
     };
 
     await pool.query(query);
+    return id;
   },
 
   async cleanTable() {

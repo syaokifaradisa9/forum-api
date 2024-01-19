@@ -1,13 +1,13 @@
 /* istanbul ignore file */
 
 const ServerTestHelper = {
-  async getAccessTokenHelper({ server }) {
+  async getAccessTokenWithUserIdHelper({ server }) {
     const userPayload = {
       username: 'syaokifaradisa',
       password: 'secret',
     };
 
-    await server.inject({
+    const responseUser = await server.inject({
       method: 'POST',
       url: '/users',
       payload: {
@@ -23,9 +23,10 @@ const ServerTestHelper = {
       payload: userPayload,
     });
 
+    const { id: userId } = JSON.parse(responseUser.payload).data.addedUser;
     const { accessToken } = JSON.parse(responseAuth.payload).data;
 
-    return accessToken;
+    return { userId, accessToken };
   },
 };
 
