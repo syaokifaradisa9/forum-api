@@ -18,7 +18,7 @@ describe('a NewCommentEntities', () => {
       owner: [],
     };
 
-    expect(() => new NewComment(payload)).toThrowError('NEW_COMMENT.NOT_MEET_DATA_TYPE_SPESIFICATION');
+    expect(() => new NewComment(payload)).toThrowError('NEW_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
   it('should create newComment object correctly', () => {
