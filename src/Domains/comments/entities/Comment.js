@@ -9,8 +9,7 @@ class Comment {
     this.id = id;
     this.username = username;
     this.date = date;
-    this.content = content;
-    this.isDelete = isDelete;
+    this.content = isDelete ? '**komentar telah dihapus**' : content;
   }
 
   _verifyPayload({

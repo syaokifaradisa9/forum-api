@@ -9,7 +9,6 @@ describe('a Thread entities', () => {
       title: 'abc',
       body: 'abc',
       date: 'abc',
-      username: 'abc',
     };
 
     expect(() => new Thread(payload)).toThrowError('THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
@@ -22,7 +21,6 @@ describe('a Thread entities', () => {
       body: 'abc',
       date: 'abc',
       username: 'abc',
-      comments: ['asd', 'asd'],
     };
 
     expect(() => new Thread(payload)).toThrowError('THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
@@ -35,11 +33,10 @@ describe('a Thread entities', () => {
       body: 'abc',
       date: 'abc',
       username: 'abc',
-      comments: ['asd', 'asd'],
     };
 
     const {
-      id, title, body, date, username, comments,
+      id, title, body, date, username,
     } = new Thread(payload);
 
     expect(id).toEqual(payload.id);
@@ -47,6 +44,5 @@ describe('a Thread entities', () => {
     expect(body).toEqual(payload.body);
     expect(date).toEqual(payload.date);
     expect(username).toEqual(payload.username);
-    expect(comments).toEqual(payload.comments);
   });
 });

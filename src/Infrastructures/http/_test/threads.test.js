@@ -113,4 +113,28 @@ describe('/threads endpoint', () => {
       expect(responseJson.message).toEqual('Missing authentication');
     });
   });
+
+  describe('when GET /threads/{threadId}', () => {
+    it('should response 200 and return thread correctly', async () => {
+      // Arrange
+      const server = await createServer(container);
+      const threadId = 'thread-123';
+
+      // Arrange User
+      await UsersTableTestHelper.addUser({});
+      await ThreadTableTestHelper.addThread({ id: threadId });
+
+      // Action
+      const response = await server.inject({
+        method: 'GET',
+        url: `/threads/${threadId}`,
+      });
+
+      // Assert
+      const responseData = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseData.status).toEqual('success');
+      expect(responseData.data.thread).toBeDefined();
+    });
+  });
 });

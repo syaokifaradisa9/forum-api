@@ -27,16 +27,20 @@ class CommentRepositoryPostgres extends CommentRepository {
   async getCommentsByThreadId(id) {
     const query = {
       text: `
-        SELECT comments.id, comments.content, comments.date, comments.username, users.username
+        SELECT comments.*, users.username
         FROM comments INNER JOIN users ON comments.owner = users.id
-        WHERE comments.thread_id = $1,
+        WHERE comments.thread_id = $1 ORDER BY comments.date ASC
       `,
       values: [id],
     };
 
     const result = await this.pool.query(query);
     return result.rows.map((comment) => new Comment({
-      ...comment,
+      id: comment.id,
+      username: comment.username,
+      date: comment.date,
+      content: comment.content,
+      isDelete: comment.isDelete,
     }));
   }
 }

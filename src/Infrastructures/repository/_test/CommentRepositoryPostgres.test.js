@@ -14,6 +14,7 @@ const NewThread = require('../../../Domains/threads/entities/NewThread');
 const RegisterUser = require('../../../Domains/users/entities/RegisterUser');
 const NewComment = require('../../../Domains/comments/entities/NewComment');
 const AddedComment = require('../../../Domains/comments/entities/AddedComment');
+const Comment = require('../../../Domains/comments/entities/Comment');
 
 describe('CommentRepositoryPostgres', () => {
   afterEach(async () => {
@@ -62,6 +63,66 @@ describe('CommentRepositoryPostgres', () => {
         content: 'abc',
         owner: 'user-123',
       }));
+    });
+  });
+
+  describe('getCommentsByThreadId function', () => {
+    it('should return comments correctly', async () => {
+      await UsersTableTestHelper.addUser(new RegisterUser({
+        username: 'syaokifaradisa',
+        password: 'secret_password',
+        fullname: 'Syaoki Faradisa',
+      }));
+
+      await ThreadTableTestHelper.addThread(new NewThread({
+        title: 'abc',
+        body: 'abcdef',
+        owner: 'user-123',
+      }));
+
+      const date = new Date();
+      const comment1Date = date.toISOString();
+      date.setHours(date.getHours() + 1);
+      const comment2Date = date.toISOString();
+
+      const comment1 = {
+        id: 'comment-1',
+        content: 'comment 1',
+        threadId: 'thread-123',
+        owner: 'user-123',
+        date: comment1Date,
+      };
+
+      const comment2 = {
+        id: 'comment-2',
+        content: 'comment 2',
+        threadId: 'thread-123',
+        owner: 'user-123',
+        date: comment2Date,
+      };
+
+      await CommentTableTestHelper.addComment(comment1);
+      await CommentTableTestHelper.addComment(comment2);
+
+      const commentRepositoryPosgres = new CommentRepositoryPostgres(pool, {});
+      const comments = await commentRepositoryPosgres.getCommentsByThreadId('thread-123');
+
+      expect(comments).toEqual([
+        new Comment({
+          id: comment1.id,
+          username: 'syaokifaradisa',
+          date: comment1.date,
+          content: comment1.content,
+          isDelete: false,
+        }),
+        new Comment({
+          id: comment2.id,
+          username: 'syaokifaradisa',
+          date: comment2.date,
+          content: comment2.content,
+          isDelete: false,
+        }),
+      ]);
     });
   });
 });
