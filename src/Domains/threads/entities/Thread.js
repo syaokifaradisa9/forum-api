@@ -27,7 +27,7 @@ class Thread {
         || typeof title !== 'string'
         || typeof body !== 'string'
         || typeof date !== 'string'
-        || typeof username !== 'string'){
+        || typeof username !== 'string') {
       throw new Error('THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }
