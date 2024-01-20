@@ -37,14 +37,14 @@ describe('GetThreadUseCase', () => {
         username: 'syaokifaradisa',
         date: comment1Date,
         content: 'comment 1',
-        isDelete: false,
+        isdelete: false,
       }),
       new Comment({
         id: 'comment-2',
         username: 'syaokifaradisa',
         date: comment2Date,
         content: 'comment 2',
-        isDelete: true,
+        isdelete: true,
       }),
     ];
 
@@ -61,6 +61,8 @@ describe('GetThreadUseCase', () => {
     const threadDetail = await getThreadDetailUseCase.execute(useCasePayload);
 
     // Assert
+    expect(mockThreadRepository.getThreadById).toBeCalledWith(useCasePayload.threadId);
+    expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(useCasePayload.threadId);
     expect(threadDetail).toEqual({
       id: thread.id,
       title: thread.title,
@@ -82,8 +84,5 @@ describe('GetThreadUseCase', () => {
         },
       ],
     });
-
-    expect(mockThreadRepository.getThreadById).toBeCalledWith(useCasePayload.threadId);
-    expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(useCasePayload.threadId);
   });
 });

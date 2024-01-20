@@ -113,14 +113,14 @@ describe('CommentRepositoryPostgres', () => {
           username: 'syaokifaradisa',
           date: comment1.date,
           content: comment1.content,
-          isDelete: false,
+          isdelete: false,
         }),
         new Comment({
           id: comment2.id,
           username: 'syaokifaradisa',
           date: comment2.date,
           content: comment2.content,
-          isDelete: false,
+          isdelete: false,
         }),
       ]);
     });

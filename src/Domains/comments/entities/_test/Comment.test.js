@@ -19,7 +19,7 @@ describe('a Comment entities', () => {
       username: 'user-123',
       content: 444,
       date: 123,
-      isDelete: 22,
+      isdelete: 22,
     };
 
     expect(() => new Comment(payload)).toThrowError('COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
@@ -31,17 +31,17 @@ describe('a Comment entities', () => {
       username: 'user-123',
       content: 'abc',
       date: '2024',
-      isDelete: false,
+      isdelete: false,
     };
 
     const {
-      id, username, content, date, is_delete: isDelete,
+      id, username, content, date, is_delete: isdelete,
     } = new Comment(payload);
 
     expect(id).toEqual(payload.id);
     expect(content).toEqual(payload.content);
     expect(username).toEqual(payload.username);
     expect(date).toEqual(payload.date);
-    expect(isDelete).toEqual(payload.is_delete);
+    expect(isdelete).toEqual(payload.is_delete);
   });
 });
