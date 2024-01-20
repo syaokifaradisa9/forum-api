@@ -16,6 +16,17 @@ const CommentTableTestHelper = {
     };
 
     await pool.query(query);
+    return id;
+  },
+
+  async getCommentById(id) {
+    const query = {
+      text: 'SELECT * FROM comments where id=$1',
+      values: [id],
+    };
+
+    const result = await pool.query(query);
+    return result.rows[0];
   },
 
   async cleanTable() {

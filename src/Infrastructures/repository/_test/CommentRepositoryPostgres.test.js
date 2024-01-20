@@ -15,6 +15,8 @@ const RegisterUser = require('../../../Domains/users/entities/RegisterUser');
 const NewComment = require('../../../Domains/comments/entities/NewComment');
 const AddedComment = require('../../../Domains/comments/entities/AddedComment');
 const Comment = require('../../../Domains/comments/entities/Comment');
+const AuthorizationError = require('../../../Commons/exceptions/AuthorizationError');
+const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 
 describe('CommentRepositoryPostgres', () => {
   afterEach(async () => {
@@ -123,6 +125,111 @@ describe('CommentRepositoryPostgres', () => {
           isdelete: false,
         }),
       ]);
+    });
+  });
+
+  describe('verifyCommentOwner function', () => {
+    it('should resolve and not throw AuthorizationError when user have access to comment', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.addThread({ id: 'thread-123' });
+      await CommentTableTestHelper.addComment({
+        id: 'comment-123',
+        owner: 'user-123',
+        threadId: 'thread-123',
+      });
+
+      // Action and Assert
+      const commentRepositoryPosgres = new CommentRepositoryPostgres(pool, {});
+      expect(commentRepositoryPosgres.verifyCommentOwner({
+        id: 'comment-123',
+        owner: 'user-123',
+      })).resolves.not.toThrowError(AuthorizationError);
+    });
+
+    it('should throw AuthorizationError when doesnt have access to comment', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.addThread({ id: 'thread-123' });
+      await CommentTableTestHelper.addComment({
+        id: 'comment-123',
+        owner: 'user-123',
+        threadId: 'thread-123',
+      });
+
+      // Action and Assert
+      const commentRepositoryPosgres = new CommentRepositoryPostgres(pool, {});
+      expect(commentRepositoryPosgres.verifyCommentOwner({
+        id: 'comment-123',
+        owner: 'user-321',
+      })).rejects.toThrowError(AuthorizationError);
+    });
+  });
+
+  describe('verifyCommentAvailableStatus function', () => {
+    it('should resolve and not throw NotFoundError when comment is available', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.addThread({ id: 'thread-123' });
+      await CommentTableTestHelper.addComment({
+        id: 'comment-123',
+        owner: 'user-123',
+        threadId: 'thread-123',
+      });
+
+      // Action and Assert
+      const commentRepositoryPosgres = new CommentRepositoryPostgres(pool, {});
+      expect(commentRepositoryPosgres.verifyCommentAvailableStatus('comment-123')).resolves.not.toThrowError(NotFoundError);
+    });
+
+    it('should throw NotFoundError when comment is not available', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.addThread({ id: 'thread-123' });
+      await CommentTableTestHelper.addComment({
+        id: 'comment-123',
+        owner: 'user-123',
+        threadId: 'thread-123',
+      });
+
+      // Action and Assert
+      const commentRepositoryPosgres = new CommentRepositoryPostgres(pool, {});
+      expect(commentRepositoryPosgres.verifyCommentAvailableStatus('comment-321')).rejects.toThrowError(NotFoundError);
+    });
+  });
+
+  describe('deleteCommentById function', () => {
+    it('should resolve and not to throw NotFoundError when comment is deleted', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.addThread({ id: 'thread-123' });
+      await CommentTableTestHelper.addComment({
+        id: 'comment-123',
+        owner: 'user-123',
+        threadId: 'thread-123',
+      });
+      const commentRepositoryPosgres = new CommentRepositoryPostgres(pool, {});
+
+      // Action
+      await commentRepositoryPosgres.deleteCommentById('comment-123');
+
+      const comment = await CommentTableTestHelper.getCommentById('comment-123');
+      expect(comment.isdelete).toEqual(true);
+    });
+
+    it('should throw NotFoundError when comment is not exists', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.addThread({ id: 'thread-123' });
+      await CommentTableTestHelper.addComment({
+        id: 'comment-123',
+        owner: 'user-123',
+        threadId: 'thread-123',
+      });
+
+      // Action and Assert
+      const commentRepositoryPosgres = new CommentRepositoryPostgres(pool, {});
+      expect(commentRepositoryPosgres.deleteCommentById('comment-321')).rejects.toThrowError(NotFoundError);
     });
   });
 });
