@@ -22,9 +22,9 @@ describe('AuthenticationRepository postgres', () => {
 
       // Action
       await authenticationRepository.addToken(token);
+      const tokens = await AuthenticationsTableTestHelper.findToken(token);
 
       // Assert
-      const tokens = await AuthenticationsTableTestHelper.findToken(token);
       expect(tokens).toHaveLength(1);
       expect(tokens[0].token).toBe(token);
     });
@@ -58,9 +58,9 @@ describe('AuthenticationRepository postgres', () => {
       // Arrange
       const authenticationRepository = new AuthenticationRepositoryPostgres(pool);
       const token = 'token';
-      await AuthenticationsTableTestHelper.addToken(token);
 
       // Action
+      await AuthenticationsTableTestHelper.addToken(token);
       await authenticationRepository.deleteToken(token);
 
       // Assert

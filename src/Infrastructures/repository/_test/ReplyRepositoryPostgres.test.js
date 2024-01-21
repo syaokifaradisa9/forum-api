@@ -27,7 +27,6 @@ describe('ReplyRepositoryPostgres', () => {
     it('should return addedReply correctly', async () => {
       // Arrange
       const fakeIdgenerator = () => '123';
-
       const userId = 'user-123';
       const threadId = 'thread-123';
       const commentId = 'comment-123';
@@ -39,6 +38,7 @@ describe('ReplyRepositoryPostgres', () => {
         commentId,
         owner: userId,
       };
+      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, fakeIdgenerator);
 
       // Action
       await UsersTableTestHelper.addUser({ id: 'user-123' });
@@ -54,7 +54,6 @@ describe('ReplyRepositoryPostgres', () => {
         date: dateComment,
       });
 
-      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, fakeIdgenerator);
       const addedReply = await replyRepositoryPostgres.addReply(requestPayload);
 
       // Assert
@@ -147,18 +146,17 @@ describe('ReplyRepositoryPostgres', () => {
       const threadId = 'thread-123';
       const commentId = 'comment-123';
       const replyId = 'reply-123';
+      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
 
       //   Action
       await UsersTableTestHelper.addUser({ id: userId });
       await ThreadTableTestHelper.addThread({ id: threadId });
       await CommentTableTestHelper.addComment({ id: commentId });
       await ReplyTableTestHelper.addReply({ id: replyId });
-
-      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
       await replyRepositoryPostgres.deleteReplyById(replyId);
+      const reply = await ReplyTableTestHelper.getReplyById(replyId);
 
       // Assert
-      const reply = await ReplyTableTestHelper.getReplyById(replyId);
       expect(reply.isdelete).toEqual(true);
     });
 
@@ -169,6 +167,7 @@ describe('ReplyRepositoryPostgres', () => {
       const commentId = 'comment-123';
       const replyId = 'reply-123';
       const notFoundReplyId = 'reply-321';
+      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
 
       //   Action
       await UsersTableTestHelper.addUser({ id: userId });
@@ -177,7 +176,6 @@ describe('ReplyRepositoryPostgres', () => {
       await ReplyTableTestHelper.addReply({ id: replyId });
 
       // Assert
-      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
       await expect(replyRepositoryPostgres.deleteReplyById(notFoundReplyId))
         .rejects.toThrowError(NotFoundError);
     });
