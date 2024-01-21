@@ -18,6 +18,7 @@ describe('a Reply entities', () => {
       date: '01-01-2024',
       username: ['syaokifaradisa09'],
       isdelete: false,
+      commentId: 'comment-123',
     };
 
     expect(() => new Reply(payload)).toThrowError('REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
@@ -30,16 +31,18 @@ describe('a Reply entities', () => {
       date: '01-01-2024',
       username: 'syaokifaradisa09',
       isdelete: false,
+      commentId: 'comment-123',
     };
 
     const {
-      id, content, date, username,
+      id, content, date, username, commentId,
     } = new Reply(payload);
 
     expect(id).toEqual(payload.id);
     expect(content).toEqual(payload.content);
     expect(date).toEqual(payload.date);
     expect(username).toEqual(payload.username);
+    expect(commentId).toEqual(payload.commentId);
   });
 
   it('should create Reply object correctly when reply is deleted', () => {
@@ -49,15 +52,17 @@ describe('a Reply entities', () => {
       date: '01-01-2024',
       username: 'syaokifaradisa09',
       isdelete: true,
+      commentId: 'comment-123',
     };
 
     const {
-      id, content, date, username,
+      id, content, date, username, commentId,
     } = new Reply(payload);
 
     expect(id).toEqual(payload.id);
     expect(content).toEqual('**balasan telah dihapus**');
     expect(date).toEqual(payload.date);
     expect(username).toEqual(payload.username);
+    expect(commentId).toEqual(payload.commentId);
   });
 });

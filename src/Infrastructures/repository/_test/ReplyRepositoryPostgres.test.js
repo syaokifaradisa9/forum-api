@@ -66,7 +66,7 @@ describe('ReplyRepositoryPostgres', () => {
     });
   });
 
-  describe('getRepliesByCommentId function', () => {
+  describe('getRepliesByThreadId function', () => {
     it('should return replies correctly', async () => {
       // Arrange
       const username = 'syaokifaradisa09';
@@ -118,7 +118,7 @@ describe('ReplyRepositoryPostgres', () => {
       await ReplyTableTestHelper.addReply(secondRequestReplyPayload);
 
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
-      const replies = await replyRepositoryPostgres.getRepliesByCommentId(commentId);
+      const replies = await replyRepositoryPostgres.getRepliesByThreadId(threadId);
 
       // Assert
       expect(replies).toEqual([
@@ -128,6 +128,7 @@ describe('ReplyRepositoryPostgres', () => {
           date: firstRequestReplyPayload.date,
           username,
           isdelete: firstRequestReplyPayload.isdelete,
+          commentId,
         }),
         new Reply({
           id: secondReplyId,
@@ -135,6 +136,7 @@ describe('ReplyRepositoryPostgres', () => {
           date: secondRequestReplyPayload.date,
           username,
           isdelete: secondRequestReplyPayload.isdelete,
+          commentId,
         }),
       ]);
     });

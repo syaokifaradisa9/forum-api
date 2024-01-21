@@ -26,12 +26,14 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     return new AddedReply({ ...result.rows[0] });
   }
 
-  async getRepliesByCommentId(id) {
+  async getRepliesByThreadId(id) {
     const query = {
       text: `
         SELECT replies.*, users.username
-        FROM replies INNER JOIN users ON replies.owner = users.id
-        WHERE replies.comment_id = $1 ORDER BY replies.date ASC
+        FROM replies
+        INNER JOIN users ON replies.owner = users.id
+        INNER JOIN comments ON replies.comment_id = comments.id
+        WHERE comments.thread_id = $1 ORDER BY replies.date ASC
     `,
       values: [id],
     };
@@ -43,6 +45,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
       date: reply.date,
       username: reply.username,
       isdelete: reply.isdelete,
+      commentId: reply.comment_id,
     }));
   }
 
