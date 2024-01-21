@@ -18,6 +18,10 @@ exports.up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
+    date: {
+      type: 'VARCHAR(50)',
+      notNull: true,
+    },
     isdelete: {
       type: 'BOOLEAN',
       notNull: true,
@@ -30,5 +34,5 @@ exports.up = (pgm) => {
 };
 
 exports.down = (pgm) => {
-  pgm.dropTable('comments');
+  pgm.dropTable('replies');
 };
