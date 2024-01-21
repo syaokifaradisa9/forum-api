@@ -11,17 +11,20 @@ const pool = require('./database/postgres/pool');
 const PasswordHash = require('../Applications/security/PasswordHash');
 const BcryptPasswordHash = require('./security/BcryptPasswordHash');
 
+const ReplyRepository = require('../Domains/replies/ReplyRepository');
 const UserRepository = require('../Domains/users/UserRepository');
 const ThreadRepository = require('../Domains/threads/ThreadRepository');
 const CommentRepository = require('../Domains/comments/CommentRepository');
 const AuthenticationRepository = require('../Domains/authentications/AuthenticationRepository');
 
+const ReplyRepositoryPostgres = require('./repository/ReplyRepositoryPostgres');
 const CommentRepositoryPostgres = require('./repository/CommentRepositoryPostgres');
 const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres');
 const AuthenticationRepositoryPostgres = require('./repository/AuthenticationRepositoryPostgres');
 const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres');
 
 // use case
+const AddReplyUseCase = require('../Applications/use_case/AddReplyUseCase');
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase');
 const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager');
 const JwtTokenManager = require('./security/JwtTokenManager');
@@ -102,6 +105,20 @@ container.register([
   {
     key: CommentRepository.name,
     Class: CommentRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: ReplyRepository.name,
+    Class: ReplyRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -245,6 +262,27 @@ container.register([
         {
           name: 'commentRepository',
           internal: CommentRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddReplyUseCase.name,
+    Class: AddReplyUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
+        },
+        {
+          name: 'replyRepository',
+          internal: ReplyRepository.name,
         },
       ],
     },
