@@ -2,7 +2,7 @@
 
 const NewComment = require('../NewComment');
 
-describe('a NewCommentEntities', () => {
+describe('a NewComment Entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
       content: '123',
@@ -11,7 +11,7 @@ describe('a NewCommentEntities', () => {
     expect(() => new NewComment(payload)).toThrowError('NEW_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
-  it('should throw error when payload did not meet data type spesification', () => {
+  it('should throw error when payload did not meet data type specification', () => {
     const payload = {
       content: 'abc',
       threadId: 123,

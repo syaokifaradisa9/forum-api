@@ -25,7 +25,7 @@ describe('a Comment entities', () => {
     expect(() => new Comment(payload)).toThrowError('COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
-  it('should create Comment object correctly', () => {
+  it('should create Comment object correctly when comment not deleted', () => {
     const payload = {
       id: 'comment-123',
       username: 'user-123',
@@ -35,13 +35,31 @@ describe('a Comment entities', () => {
     };
 
     const {
-      id, username, content, date, is_delete: isdelete,
+      id, username, content, date,
     } = new Comment(payload);
 
     expect(id).toEqual(payload.id);
     expect(content).toEqual(payload.content);
     expect(username).toEqual(payload.username);
     expect(date).toEqual(payload.date);
-    expect(isdelete).toEqual(payload.is_delete);
+  });
+
+  it('should create Comment object correctly when comment id deleted', () => {
+    const payload = {
+      id: 'comment-123',
+      username: 'user-123',
+      content: 'abc',
+      date: '2024',
+      isdelete: true,
+    };
+
+    const {
+      id, username, content, date,
+    } = new Comment(payload);
+
+    expect(id).toEqual(payload.id);
+    expect(content).toEqual('**komentar telah dihapus**');
+    expect(username).toEqual(payload.username);
+    expect(date).toEqual(payload.date);
   });
 });
