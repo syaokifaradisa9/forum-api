@@ -10,7 +10,6 @@ class Reply {
     this.content = isdelete ? '**balasan telah dihapus**' : content;
     this.date = date;
     this.username = username;
-    this.isdelete = isdelete;
   }
 
   _verifyPayload({
