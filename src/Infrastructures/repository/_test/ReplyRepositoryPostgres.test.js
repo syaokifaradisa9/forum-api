@@ -10,6 +10,7 @@ const CommentTableTestHelper = require('../../../../tests/CommentTableTestHelper
 const ReplyTableTestHelper = require('../../../../tests/ReplyTableTestHelper');
 const Reply = require('../../../Domains/replies/Entities/Reply');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
+const AuthorizationError = require('../../../Commons/exceptions/AuthorizationError');
 
 describe('ReplyRepositoryPostgres', () => {
   afterEach(async () => {
@@ -177,6 +178,104 @@ describe('ReplyRepositoryPostgres', () => {
 
       // Assert
       await expect(replyRepositoryPostgres.deleteReplyById(notFoundReplyId))
+        .rejects.toThrowError(NotFoundError);
+    });
+  });
+
+  describe('verifyReplyOwner function', () => {
+    it('should resolve and not throw AuthorizationError when user have access to reply', async () => {
+      // Arrange
+      const userId = 'user-123';
+      const threadId = 'thread-123';
+      const commentId = 'comment-123';
+      const replyId = 'reply-123';
+      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
+
+      // Action
+      await UsersTableTestHelper.addUser({ id: userId });
+      await ThreadTableTestHelper.addThread({ id: threadId });
+      await CommentTableTestHelper.addComment({ id: commentId });
+      await ReplyTableTestHelper.addReply({
+        id: replyId,
+        owner: userId,
+      });
+
+      // Assert
+      expect(replyRepositoryPostgres.verifyReplyOwner({
+        id: replyId,
+        owner: userId,
+      })).resolves.not.toThrowError(AuthorizationError);
+    });
+
+    it('should throw AuthorizationError when doesnt have access to reply', async () => {
+      // Arrange
+      const userId = 'user-123';
+      const anotherUserId = 'user-456';
+      const threadId = 'thread-123';
+      const commentId = 'comment-123';
+      const replyId = 'reply-123';
+      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
+
+      // Action
+      await UsersTableTestHelper.addUser({ id: userId });
+      await ThreadTableTestHelper.addThread({ id: threadId });
+      await CommentTableTestHelper.addComment({ id: commentId });
+      await ReplyTableTestHelper.addReply({
+        id: replyId,
+        owner: userId,
+      });
+
+      // Assert
+      expect(replyRepositoryPostgres.verifyReplyOwner({
+        id: replyId,
+        owner: anotherUserId,
+      })).rejects.toThrowError(AuthorizationError);
+    });
+  });
+
+  describe('verifyReplyAvailableStatus function', () => {
+    it('should resolve and not throw NotFoundError when reply is available', async () => {
+      // Arrange
+      const userId = 'user-123';
+      const threadId = 'thread-123';
+      const commentId = 'comment-123';
+      const replyId = 'reply-123';
+      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
+
+      // Action
+      await UsersTableTestHelper.addUser({ id: userId });
+      await ThreadTableTestHelper.addThread({ id: threadId });
+      await CommentTableTestHelper.addComment({ id: commentId });
+      await ReplyTableTestHelper.addReply({
+        id: replyId,
+        owner: userId,
+      });
+
+      // Assert
+      expect(replyRepositoryPostgres.verifyReplyAvailableStatus(replyId))
+        .resolves.not.toThrowError(NotFoundError);
+    });
+
+    it('should throw NotFoundError when reply is not available', async () => {
+      // Arrange
+      const userId = 'user-123';
+      const threadId = 'thread-123';
+      const commentId = 'comment-123';
+      const replyId = 'reply-123';
+      const notFoundReplyId = 'reply-456';
+      const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
+
+      // Action
+      await UsersTableTestHelper.addUser({ id: userId });
+      await ThreadTableTestHelper.addThread({ id: threadId });
+      await CommentTableTestHelper.addComment({ id: commentId });
+      await ReplyTableTestHelper.addReply({
+        id: replyId,
+        owner: userId,
+      });
+
+      // Assert
+      expect(replyRepositoryPostgres.verifyReplyAvailableStatus(notFoundReplyId))
         .rejects.toThrowError(NotFoundError);
     });
   });
