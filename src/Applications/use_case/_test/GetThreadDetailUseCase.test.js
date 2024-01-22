@@ -1,11 +1,8 @@
 /* eslint-disable no-undef */
 
-const Comment = require('../../../Domains/comments/entities/Comment');
-const Thread = require('../../../Domains/threads/entities/Thread');
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
 const CommentRepository = require('../../../Domains/comments/CommentRepository');
 const GetThreadDetailUseCase = require('../GetThreadDetailUseCase');
-const Reply = require('../../../Domains/replies/Entities/Reply');
 const ReplyRepository = require('../../../Domains/replies/ReplyRepository');
 
 describe('GetThreadUseCase', () => {
@@ -35,48 +32,48 @@ describe('GetThreadUseCase', () => {
       threadId,
     };
 
-    const thread = new Thread({
+    const thread = {
       id: threadId,
       title: 'thread title',
       body: 'body thread',
       date: 'date thread',
       username,
-    });
+    };
 
     const comments = [
-      new Comment({
+      {
         id: firstCommentId,
         username,
         date: firstCommentDate,
         content,
         isdelete: false,
-      }),
-      new Comment({
+      },
+      {
         id: secondCommentId,
         username,
         date: secondCommentDate,
         content,
-        isdelete: true,
-      }),
+        isdelete: false,
+      },
     ];
 
     const replies = [
-      new Reply({
+      {
         id: firstReplyId,
         content,
         date: firstReply1Date,
         username,
         isdelete: false,
         commentId: firstCommentId,
-      }),
-      new Reply({
+      },
+      {
         id: secondReplyId,
         content,
         date: secondReplyDate,
         username,
-        isdelete: false,
+        isdelete: true,
         commentId: secondCommentId,
-      }),
+      },
     ];
 
     const mockThreadRepository = new ThreadRepository();
@@ -116,6 +113,7 @@ describe('GetThreadUseCase', () => {
           username,
           date: firstCommentDate,
           content,
+          isdelete: comments[0].isdelete,
           replies: [
             replies[0],
           ],
@@ -124,7 +122,8 @@ describe('GetThreadUseCase', () => {
           id: secondCommentId,
           username,
           date: secondCommentDate,
-          content: '**komentar telah dihapus**',
+          content,
+          isdelete: comments[1].isdelete,
           replies: [
             replies[1],
           ],
