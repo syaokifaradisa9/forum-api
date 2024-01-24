@@ -4,6 +4,7 @@ const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
 const CommentRepository = require('../../../Domains/comments/CommentRepository');
 const GetThreadDetailUseCase = require('../GetThreadDetailUseCase');
 const ReplyRepository = require('../../../Domains/replies/ReplyRepository');
+const CommentLikeRepository = require('../../../Domains/comment_like/CommentLikeRepository');
 
 describe('GetThreadUseCase', () => {
   it('should orchestrating the get thread detail correctly', async () => {
@@ -76,22 +77,34 @@ describe('GetThreadUseCase', () => {
       },
     ];
 
+    const commentLikes = [
+      {
+        id: 'like-123',
+        comment_id: 'comment-123',
+      },
+      {
+        id: 'like-456',
+        comment_id: 'comment-123',
+      },
+    ];
+
     const mockThreadRepository = new ThreadRepository();
-    mockThreadRepository.getThreadById = jest.fn()
-      .mockImplementation(() => Promise.resolve(thread));
+    mockThreadRepository.getThreadById = jest.fn(() => Promise.resolve(thread));
 
     const mockCommentRepository = new CommentRepository();
-    mockCommentRepository.getCommentsByThreadId = jest.fn()
-      .mockImplementation(() => Promise.resolve(comments));
+    mockCommentRepository.getCommentsByThreadId = jest.fn(() => Promise.resolve(comments));
 
     const mockReplyRepository = new ReplyRepository();
-    mockReplyRepository.getRepliesByThreadId = jest.fn()
-      .mockImplementation(() => Promise.resolve(replies));
+    mockReplyRepository.getRepliesByThreadId = jest.fn(() => Promise.resolve(replies));
+
+    const mockCommentLikeRepository = new CommentLikeRepository();
+    mockCommentLikeRepository.getLikeCountByThreadId = jest.fn(() => Promise.resolve(commentLikes));
 
     const getThreadDetailUseCase = new GetThreadDetailUseCase({
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
       replyRepository: mockReplyRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     // Action
@@ -114,6 +127,7 @@ describe('GetThreadUseCase', () => {
           date: firstCommentDate,
           content,
           isdelete: comments[0].isdelete,
+          likeCount: commentLikes.filter((like) => like.comment_id === firstCommentId).length,
           replies: [
             replies[0],
           ],
@@ -124,6 +138,7 @@ describe('GetThreadUseCase', () => {
           date: secondCommentDate,
           content,
           isdelete: comments[1].isdelete,
+          likeCount: commentLikes.filter((like) => like.comment_id === secondCommentId).length,
           replies: [
             replies[1],
           ],
