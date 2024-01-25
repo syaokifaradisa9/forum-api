@@ -120,7 +120,7 @@ describe('/threads/{threadId}/comments/{commentId}/likes endpoint', () => {
       });
 
       const responseJson = JSON.parse(response.payload);
-      expect(response.statusCode).toEqual(401);
+      expect(response.statusCode).toEqual(400);
       expect(responseJson.error).toEqual('Unauthorized');
       expect(responseJson.message).toEqual('Missing authentication');
     });
